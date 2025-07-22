@@ -1,21 +1,34 @@
 # Microsoft Sentinel: Microsoft Teams Calls Monitoring
-📞 Microsoft Teams Call Monitoring with Azure Logic Apps & Log Analytics
+### 📞 Microsoft Teams Call Monitoring with Azure Logic Apps & Log Analytics
 
-This project provides an automated solution to collect and analyze Microsoft Teams call records using Azure Logic Apps and Microsoft Graph API. The data is parsed and sent to Azure Log Analytics, where advanced KQL queries extract insights such as call duration, participant identities, device information, and network metrics.
+This project automates the collection and analysis of Microsoft Teams call records using Azure Logic Apps, Microsoft Graph API, and Azure Log Analytics. It helps security and operations teams monitor external calls, detect anomalies, and enrich call data for investigation or reporting.
 
-🔧 Technologies Used:
+###🔧 Technologies Used:
 
 Azure Logic Apps
 Microsoft Graph API
 Azure Log Analytics
 Kusto Query Language (KQL)
-✨ Key Features:
 
-Scheduled retrieval of Teams call records via Graph API
-JSON parsing of session and segment data
-Enrichment with device, network, and user metadata
-Custom KQL queries for monitoring and reporting
-Integration with Azure Monitor for visualization and alerting
+
+###🚀 What This Project Does:
+
+Collects Teams call records every hour via a Logic App.
+Retrieves detailed session and segment data using Microsoft Graph API.
+Sends enriched data to Azure Log Analytics.
+Parses and analyzes the data using KQL queries.
+Detects suspicious or external calls using detection logic.
+
+###🧠 How to Use:
+
+- Deploy the Logic App using the JSON file.
+- Configure authentication for Microsoft Graph API.
+- Set up Azure Log Analytics and connect it to the Logic App.
+- Use the KQL queries to parse and analyze the data.
+- Optionally, create Sentinel Analytics Rules based on the detection queries.
+
+###📚 References:
+
 Inspired by the Microsoft Tech Community article on Teams call monitoring, this solution expands with custom parsing logic and flexible automation (https://techcommunity.microsoft.com/blog/microsoftsentinelblog/secure-your-calls--monitoring-microsoft-teams-callrecords-activity-logs-using-az/1574600).
 
 
