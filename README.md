@@ -40,5 +40,6 @@ This Logic App automates the collection and processing of Microsoft Teams call r
 
    The diagram below illustrates the flow of the Logic App:
 
-   <img width="1024" height="1024" alt="image" src="https://github.com/user-attachments/assets/42d50f02-e46d-4b4b-98f9-e31fb00ac6df" />
+   <img width="1024" height="1024" alt="image" src="https://github.com/user-attachments/assets/3d718bf2-129b-4667-ab37-cdfbd3b3c60c" />
+
 
