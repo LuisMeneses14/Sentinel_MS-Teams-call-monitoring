@@ -41,5 +41,5 @@ TEAMSCallRecords_CL
 | extend relayIPAddress_caller = tostring(parse_json(tostring(parse_json(tostring(parse_json(tostring(session[0].segments))[0].media))[0].callerNetwork)).relayIPAddress)
 | extend tenantId_caller = tostring(parse_json(tostring(parse_json(tostring(parse_json(tostring(session[0].caller)).identity)).user)).tenantId)
 | extend tenantId_callee = tostring(parse_json(tostring(parse_json(tostring(session[0].callee)).associatedIdentity)).tenantId)
-| extend callerIsExternal = iff(organizer_user_tenantId_g != BG_tenant, "Yes", "No")
-| extend calleeIsExternal = iff(tenantId_callee != BG_tenant, "Yes", "No")
+| extend callerIsExternal = iff(organizer_user_tenantId_g != Your_tenant, "Yes", "No")
+| extend calleeIsExternal = iff(tenantId_callee != Your_tenant, "Yes", "No")
