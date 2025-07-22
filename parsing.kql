@@ -9,7 +9,7 @@
 //- Call duration and timestamps
 //- Internal vs. external participant classification
 
-//Save this as a function in Microsoft Sentinel. 
+//Save this as a function in Microsoft Sentinel (e.g. "Teams_Calls_Parsed").
 
 
 let Your_tenant = "Your_Tenant_ID";
