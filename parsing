@@ -9,7 +9,7 @@ These queries extract key metadata such as:
 - Call duration and timestamps
 - Internal vs. external participant classification
 
-Save this as a function in Microsoft Sentinelt. 
+Save this as a function in Microsoft Sentinel. 
 
 
 let Your_tenant = "Your_Tenant_ID";
