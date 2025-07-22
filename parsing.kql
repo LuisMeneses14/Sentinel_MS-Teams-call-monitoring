@@ -1,15 +1,15 @@
 
-# 📊 Parsing Queries for Microsoft Teams Call Records
+//# 📊 Parsing Queries for Microsoft Teams Call Records
 
-This contains KQL query used to parse and enrich Microsoft Teams call records ingested via Azure Logic Apps.
+//This contains KQL query used to parse and enrich Microsoft Teams call records ingested via Azure Logic Apps.
 
-These queries extract key metadata such as:
-- Caller and callee identities
-- Device and network information
-- Call duration and timestamps
-- Internal vs. external participant classification
+//These queries extract key metadata such as:
+//- Caller and callee identities
+//- Device and network information
+//- Call duration and timestamps
+//- Internal vs. external participant classification
 
-Save this as a function in Microsoft Sentinel. 
+//Save this as a function in Microsoft Sentinel. 
 
 
 let Your_tenant = "Your_Tenant_ID";
