@@ -3,7 +3,7 @@
 
 This project automates the collection and analysis of Microsoft Teams call records using Azure Logic Apps, Microsoft Graph API, and Azure Log Analytics. It helps security and operations teams monitor external calls, detect anomalies, and enrich call data for investigation or reporting.
 
-###🔧 Technologies Used:
+### 🔧 Technologies Used:
 
 Azure Logic Apps
 Microsoft Graph API
@@ -11,7 +11,7 @@ Azure Log Analytics
 Kusto Query Language (KQL)
 
 
-###🚀 What This Project Does:
+### 🚀 What This Project Does:
 
 Collects Teams call records every hour via a Logic App.
 Retrieves detailed session and segment data using Microsoft Graph API.
@@ -19,7 +19,7 @@ Sends enriched data to Azure Log Analytics.
 Parses and analyzes the data using KQL queries.
 Detects suspicious or external calls using detection logic.
 
-###🧠 How to Use:
+### 🧠 How to Use:
 
 - Deploy the Logic App using the JSON file.
 - Configure authentication for Microsoft Graph API.
@@ -27,7 +27,7 @@ Detects suspicious or external calls using detection logic.
 - Use the KQL queries to parse and analyze the data.
 - Optionally, create Sentinel Analytics Rules based on the detection queries.
 
-###📚 References:
+### 📚 References:
 
 Inspired by the Microsoft Tech Community article on Teams call monitoring, this solution expands with custom parsing logic and flexible automation (https://techcommunity.microsoft.com/blog/microsoftsentinelblog/secure-your-calls--monitoring-microsoft-teams-callrecords-activity-logs-using-az/1574600).
 
