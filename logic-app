@@ -1,0 +1,106 @@
+{
+    "definition": {
+        "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+        "contentVersion": "1.0.0.0",
+        "triggers": {
+            "Recurrence": {
+                "type": "Recurrence",
+                "recurrence": {
+                    "frequency": "Hour",
+                    "interval": 1
+                }
+            }
+        },
+        "actions": {
+            "HTTP_-_Get_Call_Records": {
+                "type": "Http",
+                "inputs": {
+                    "uri": "https://graph.microsoft.com/beta/communications/callRecords",
+                    "method": "GET",
+                    "headers": {
+                        "Content-Type": "application/json"
+                    },
+                    "authentication": {
+                        "type": "ActiveDirectoryOAuth",
+                        "tenant": "Your_tenant",
+                        "audience": "https://graph.microsoft.com",
+                        "clientId": "Your_Client_ID",
+                        "secret": "Your_Secret"
+                    }
+                },
+                "runAfter": {}
+            },
+            "For_Each_Call": {
+                "type": "Foreach",
+                "foreach": "@body('HTTP_-_Get_Call_Records')?['value']",
+                "actions": {
+                    "HTTP_-_Get_Session_Details": {
+                        "type": "Http",
+                        "inputs": {
+                            "uri": "https://graph.microsoft.com/beta/communications/callRecords/@{items('For_Each_Call')?['id']}?$expand=sessions($expand=segments)",
+                            "method": "GET",
+                            "headers": {
+                                "Content-Type": "application/json"
+                            },
+                            "authentication": {
+                                "type": "ActiveDirectoryOAuth",
+                        "tenant": "Your_tenant",
+                        "audience": "https://graph.microsoft.com",
+                        "clientId": "Your_Client_ID",
+                        "secret": "Your_Secret"
+                            }
+                        }
+                    },
+                    "Send_Data": {
+                        "type": "ApiConnection",
+                        "inputs": {
+                            "host": {
+                                "connection": {
+                                    "name": "@parameters('$connections')['azureloganalyticsdatacollector']['connectionId']"
+                                }
+                            },
+                            "method": "post",
+                            "body": "@{body('HTTP_-_Get_Session_Details')}",
+                            "headers": {
+                                "Log-Type": "TEAMSCallRecords"
+                            },
+                            "path": "/api/logs"
+                        },
+                        "runAfter": {
+                            "HTTP_-_Get_Session_Details": [
+                                "Succeeded"
+                            ]
+                        }
+                    }
+                },
+                "runAfter": {
+                    "HTTP_-_Get_Call_Records": [
+                        "Succeeded"
+                    ]
+                }
+            }
+        },
+        "outputs": {},
+        "parameters": {
+            "$connections": {
+                "type": "Object",
+                "defaultValue": {}
+            }
+        }
+    },
+    "parameters": {
+        "$connections": {
+            "type": "Object",
+            "value": {
+                "azureloganalyticsdatacollector": {
+                    "id": "ID",
+                    "connectionId": "ConnectionID",
+                    "connectionName": "azureloganalyticsdatacollector"
+                }
+            }
+        }
+    }
+}
+        }
+    }
+}
