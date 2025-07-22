@@ -1,0 +1,45 @@
+
+# 📊 Parsing Queries for Microsoft Teams Call Records
+
+This contains KQL query used to parse and enrich Microsoft Teams call records ingested via Azure Logic Apps.
+
+These queries extract key metadata such as:
+- Caller and callee identities
+- Device and network information
+- Call duration and timestamps
+- Internal vs. external participant classification
+
+Save this as a function in Microsoft Sentinelt. 
+
+
+let Your_tenant = "Your_Tenant_ID";
+TEAMSCallRecords_CL 
+| where TimeGenerated > ago(5d)
+| where isnotempty(sessions_s) and isnotempty(participants_s)
+| extend participants = parse_json(participants_s)
+| where array_length(participants) >= 2
+| extend session = parse_json(sessions_s)
+| where array_length(session) > 0
+| extend session0 = session[0]
+| extend segment0 = parse_json(tostring(session0.segments))[0]
+| extend displayName_caller = tostring(parse_json(tostring(parse_json(participants_s)[0].phone)).displayName)
+| extend displayName_calle = tostring(parse_json(tostring(parse_json(participants_s)[1].user)).displayName)
+| extend CallStartDate = format_datetime(startDateTime_t, 'dd-MM-yyyy')
+| extend CallStartTime = format_datetime(startDateTime_t, 'HH:mm:ss')
+| extend CallEndDate = format_datetime(endDateTime_t, 'dd-MM-yyyy')
+| extend CallEndTime = format_datetime(endDateTime_t, 'HH:mm:ss')
+| extend Call_Duration = endDateTime_t - startDateTime_t
+| extend phone_number_callee = tostring(parse_json(tostring(parse_json(tostring(parse_json(tostring(session[0].callee)).identity)).phone)).id)
+| extend name_device_caller = tostring(parse_json(tostring(session[0].caller)).name)
+| extend modalities = tostring(parse_json(tostring(session[0].modalities))[0])
+| extend cpuName_callee = tostring(parse_json(tostring(parse_json(tostring(session[0].segments))[0].callee)).cpuName)
+| extend devicename_callee = tostring(parse_json(tostring(parse_json(tostring(session[0].segments))[0].callee)).name)
+| extend connectionType_callee = tostring(parse_json(tostring(parse_json(tostring(parse_json(tostring(session[0].segments))[0].media))[0].calleeNetwork)).connectionType)
+| extend ipAddress_Callee = tostring(parse_json(tostring(parse_json(tostring(parse_json(tostring(session[0].segments))[0].media))[0].calleeNetwork)).ipAddress)
+| extend ipAddress_caller = tostring(parse_json(tostring(parse_json(tostring(parse_json(tostring(session[0].segments))[0].media))[0].callerNetwork)).ipAddress)
+| extend reflexiveIPAddress_caller = tostring(parse_json(tostring(parse_json(tostring(parse_json(tostring(session[0].segments))[0].media))[0].callerNetwork)).reflexiveIPAddress)
+| extend relayIPAddress_caller = tostring(parse_json(tostring(parse_json(tostring(parse_json(tostring(session[0].segments))[0].media))[0].callerNetwork)).relayIPAddress)
+| extend tenantId_caller = tostring(parse_json(tostring(parse_json(tostring(parse_json(tostring(session[0].caller)).identity)).user)).tenantId)
+| extend tenantId_callee = tostring(parse_json(tostring(parse_json(tostring(session[0].callee)).associatedIdentity)).tenantId)
+| extend callerIsExternal = iff(organizer_user_tenantId_g != BG_tenant, "Yes", "No")
+| extend calleeIsExternal = iff(tenantId_callee != BG_tenant, "Yes", "No")
