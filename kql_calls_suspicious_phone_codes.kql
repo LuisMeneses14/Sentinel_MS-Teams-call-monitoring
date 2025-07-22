@@ -1,0 +1,26 @@
+// 📞 Suspicious Country Codes or Anonymous Callers
+//
+// Description:
+// This query identifies external Teams calls where the caller's phone number
+// starts with suspicious international dialing codes or is marked as anonymous.
+//
+// MITRE ATT&CK:
+// - T1598.004 – Phishing for Information: Spearphishing Voice (Vishing)
+// - T1585.001 – Establish Accounts: Social Media Accounts
+// - T1583.006: Acquire Infrastructure: Web Services
+//
+// Usage:
+// Use this query to detect potential fraud, spam, or social engineering attempts
+// via Teams calls from high-risk regions or anonymous sources.
+//
+// Tags: Suspicious Caller, Country Code, Anonymous, Sentinel
+
+let SuspiciousCodes = pack_array("Define codes that you consider suspicious");
+Teams_Calls_Parsed
+| where callerIsExternal == "Yes" and calleeIsExternal == "No"
+| where isempty(tenantId_caller)
+| mv-expand Code = SuspiciousCodes
+| where organizer_phone_id_s startswith tostring(Code) or organizer_phone_id_s contains "Anonymous"
+| distinct startDateTime_t, Call_Duration, organizer_phone_id_s, callerIsExternal,
+          name_device_caller, ipAddress_caller, reflexiveIPAddress_caller,
+          relayIPAddress_caller, displayName_calle, devicename_callee, ipAddress_Callee
