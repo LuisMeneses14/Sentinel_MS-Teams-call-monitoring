@@ -1,0 +1,29 @@
+// 🛡️ Threat Intelligence Match: External Teams Calls from Malicious IPs
+//
+// Description:
+// This query identifies Microsoft Teams calls where the external caller's IP address
+// matches known malicious IPs from the ThreatIntelligenceIndicator table.
+//
+// MITRE ATT&CK:
+// - T1589.003: Gather Victim Identity Information: Email Addresses
+// - T1585.001 – Establish Accounts: Social Media Accounts
+// - T1598.004 – Phishing for Information: Spearphishing Voice (Vishing)
+//
+// Usage:
+// Use this query to detect potential abuse of Teams calling by adversaries
+// leveraging known malicious infrastructure.
+//
+// Tags: Threat Intelligence, External Caller, IP Match, Sentinel
+
+let TI_IPs = ThreatIntelligenceIndicator
+| where TimeGenerated > ago(30d)
+| where isnotempty(NetworkIP)
+| project NetworkIP, ConfidenceScore, SourceSystem;
+Teams_Calls_Parsed
+| where callerIsExternal == "Yes" and calleeIsExternal == "No"
+| where isempty(tenantId_caller)
+| join kind=inner (TI_IPs) on $left.ipAddress_caller == $right.NetworkIP
+| project startDateTime_t, Call_Duration, organizer_phone_id_s, name_device_caller,
+          ipAddress_caller, reflexiveIPAddress_caller, relayIPAddress_caller,
+          displayName_calle, devicename_callee, ipAddress_Callee,
+          ConfidenceScore, SourceSystem
