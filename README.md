@@ -37,3 +37,8 @@ This Logic App automates the collection and processing of Microsoft Teams call r
 
 5. **Send to Azure Log Analytics**  
    The session data is then sent to Azure Log Analytics using the Data Collector API, where it can be queried using KQL.
+
+   The diagram below illustrates the flow of the Logic App:
+
+   <img width="1024" height="1024" alt="image" src="https://github.com/user-attachments/assets/42d50f02-e46d-4b4b-98f9-e31fb00ac6df" />
+
