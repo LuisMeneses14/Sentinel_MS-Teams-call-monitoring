@@ -1,4 +1,4 @@
-# Sentinel_teams-call-monitoring
+# Microsoft Sentinel: Microsoft Teams Calls Monitoring
 📞 Microsoft Teams Call Monitoring with Azure Logic Apps & Log Analytics
 
 This project provides an automated solution to collect and analyze Microsoft Teams call records using Azure Logic Apps and Microsoft Graph API. The data is parsed and sent to Azure Log Analytics, where advanced KQL queries extract insights such as call duration, participant identities, device information, and network metrics.
