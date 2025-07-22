@@ -14,7 +14,6 @@
 
 let Your_tenant = "Your_Tenant_ID";
 TEAMSCallRecords_CL 
-| where TimeGenerated > ago(5d)
 | where isnotempty(sessions_s) and isnotempty(participants_s)
 | extend participants = parse_json(participants_s)
 | where array_length(participants) >= 2
