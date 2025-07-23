@@ -1,0 +1,36 @@
+// 📞 Frequent External Teams Calls Detection
+//
+// Description:
+// This query identifies external phone numbers making multiple calls to internal users 
+// within short time windows (3 minutes) in Microsoft Teams. It classifies each call 
+// as "Suspect" or "Normal" based on frequency and includes only callers with no tenant ID.
+//
+// MITRE ATT&CK:
+// - T1598.002 – Phishing: Voice (Vishing)
+// - T1071.001 – Application Layer Protocol: Web Protocols
+// - T1566 – Phishing
+//
+// Usage:
+// Use this query to detect potential abuse of Teams calling by external actors 
+// attempting repeated contact, possibly for social engineering or reconnaissance.
+//
+// Tags: Teams, External Caller, Call Frequency, Vishing, Azure Monitor, Sentinel
+
+let FrequentCallers = 
+   Teams_Calls_Parsed
+    | where startDateTime_t > ago(30d)
+    | where callerIsExternal == "Yes" and calleeIsExternal == "No"
+    | where isempty(tenantId_caller)
+    | where isnotempty(organizer_phone_id_s)
+    | where isempty(tenantId_caller)
+    | summarize UniqueCallees = dcount(displayName_calle) by organizer_phone_id_s, TimeWindow = bin(startDateTime_t, 3m)
+    | where UniqueCallees > 1;
+Teams_Calls_Parsed
+| where startDateTime_t > ago(30d)
+| where callerIsExternal == "Yes" and calleeIsExternal == "No"
+| where isempty(tenantId_caller)
+| where isnotempty(organizer_phone_id_s)
+| extend TimeWindow = bin(startDateTime_t, 3m)
+| join kind=inner (FrequentCallers) on organizer_phone_id_s, TimeWindow
+| distinct startDateTime_t, organizer_phone_id_s, displayName_calle, Call_Duration, tenantId_caller, displayName_caller
+| project CallStart = startDateTime_t, CallerNumber = organizer_phone_id_s, CallerName = displayName_caller, CalleeName = displayName_calle, CallDuration = Call_Duration
