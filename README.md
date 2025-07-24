@@ -30,7 +30,7 @@ Detects suspicious or external calls using detection logic.
 
 ### 📚 References:
 
-> ℹ️ This implementation is inspired by the approach described in the [Microsoft Sentinel blog on monitoring Teams CallRecords](https://techcommunity.microsoft.com/t5/microsoft-sentinel-blog/secure-your-calls-monitoring-microsoft-teams-callBefore Logic App) but uses a custom Logic App and KQL logic tailored for external call detection.
+> ℹ️ This implementation is inspired by the approach described in the [Microsoft Sentinel blog on monitoring Teams CallRecords]([https://techcommunity.microsoft.com/t5/microsoft-sentinel-blog/secure-your-calls-monitoring-microsoft-teams-callBefore Logic App](https://techcommunity.microsoft.com/blog/microsoftsentinelblog/secure-your-calls--monitoring-microsoft-teams-callrecords-activity-logs-using-az/1574600)) but uses a custom Logic App and KQL logic tailored for external call detection.
 
 
 ## 🛰️ Collecting Microsoft Teams CallRecords Activity Data
