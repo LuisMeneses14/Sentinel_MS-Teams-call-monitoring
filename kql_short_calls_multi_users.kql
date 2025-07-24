@@ -16,7 +16,7 @@
 // Tags: Teams, External Caller, Short Calls, Multiple Targets, Vishing, Sentinel
 
 let ShortCallsToMultipleCallees = 
-    TeamsCallsParse
+    Teams_Calls_Parsed
     | where startDateTime_t > ago(30d)
     | where callerIsExternal == "Yes" and calleeIsExternal == "No"
     | where isempty(tenantId_caller)
@@ -25,7 +25,7 @@ let ShortCallsToMultipleCallees =
     | extend TimeWindow = bin(startDateTime_t, 3m)
     | summarize UniqueCallees = dcount(displayName_calle) by organizer_phone_id_s, TimeWindow
     | where UniqueCallees > 1;
-TeamsCallsParse
+Teams_Calls_Parsed
 | where startDateTime_t > ago(30d)
 | where callerIsExternal == "Yes" and calleeIsExternal == "No"
 | where isempty(tenantId_caller)
