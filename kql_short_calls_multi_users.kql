@@ -1,0 +1,38 @@
+// 📞 Short External Teams Calls to Multiple Callees
+//
+// Description:
+// This query detects external phone numbers that made short calls 
+// (less than 10 seconds) to more than one internal user within the same 3-minute window.
+// This may indicate scanning or social engineering attempts.
+//
+// MITRE ATT&CK:
+// - T1598.002 – Phishing: Voice (Vishing)
+// - T1589 – Gather Victim Identity Information
+//
+// Usage:
+// Use this query to identify external actors attempting to reach multiple targets 
+// with brief calls, possibly to test availability or gather information.
+//
+// Tags: Teams, External Caller, Short Calls, Multiple Targets, Vishing, Sentinel
+
+let ShortCallsToMultipleCallees = 
+    TeamsCallsParse
+    | where startDateTime_t > ago(30d)
+    | where callerIsExternal == "Yes" and calleeIsExternal == "No"
+    | where isempty(tenantId_caller)
+    | where isnotempty(organizer_phone_id_s)
+    | where Call_Duration < time(00:00:10)
+    | extend TimeWindow = bin(startDateTime_t, 3m)
+    | summarize UniqueCallees = dcount(displayName_calle) by organizer_phone_id_s, TimeWindow
+    | where UniqueCallees > 1;
+TeamsCallsParse
+| where startDateTime_t > ago(30d)
+| where callerIsExternal == "Yes" and calleeIsExternal == "No"
+| where isempty(tenantId_caller)
+| where isnotempty(organizer_phone_id_s)
+| where Call_Duration < time(00:00:10)
+| extend TimeWindow = bin(startDateTime_t, 3m)
+| join kind=inner (ShortCallsToMultipleCallees) on organizer_phone_id_s, TimeWindow
+| distinct startDateTime_t, organizer_phone_id_s, displayName_calle, displayName_caller, Call_Duration, tenantId_caller
+| project CallStart = startDateTime_t, CallerNumber = organizer_phone_id_s, CallerName = displayName_caller, CalleeName = displayName_calle, CallDuration = Call_Duration, tenantId_caller
+| order by CallStart desc
