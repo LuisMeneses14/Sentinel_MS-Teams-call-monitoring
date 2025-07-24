@@ -21,6 +21,7 @@ Detects suspicious or external calls using detection logic.
 
 ### 🧠 How to Use:
 
+- Collect Microsoft Teams CallRecords.
 - Deploy the Logic App using the JSON file.
 - Configure authentication for Microsoft Graph API.
 - Set up Azure Log Analytics and connect it to the Logic App.
@@ -29,8 +30,35 @@ Detects suspicious or external calls using detection logic.
 
 ### 📚 References:
 
-Inspired by the Microsoft Tech Community article on Teams call monitoring, this solution expands with custom parsing logic and flexible automation (https://techcommunity.microsoft.com/blog/microsoftsentinelblog/secure-your-calls--monitoring-microsoft-teams-callrecords-activity-logs-using-az/1574600).
+> ℹ️ This implementation is inspired by the approach described in the [Microsoft Sentinel blog on monitoring Teams CallRecords](https://techcommunity.microsoft.com/t5/microsoft-sentinel-blog/secure-your-calls-monitoring-microsoft-teams-callBefore Logic App) but uses a custom Logic App and KQL logic tailored for external call detection.
 
+
+## 🛰️ Collecting Microsoft Teams CallRecords Activity Data
+
+This project uses the Microsoft Graph CallRecords API to collect and analyze Teams call activity in near real-time. The API provides detailed metadata about peer-to-peer and group calls, including sessions and media segments. This enables security teams to monitor external communication patterns and detect anomalies such as frequent or short-duration calls.
+
+Unlike traditional audit logs, CallRecords data is retrieved via webhook subscriptions, allowing for more timely and granular insights into Teams usage.
+
+Before deploying the Logic App that ingests Teams call data, make sure the following steps are completed:
+
+1. **Register an Azure AD Application**
+   - Go to **Azure Active Directory > App registrations**.
+   - Create a new app to authenticate with Microsoft Graph.
+   - Save the **Application (client) ID** and **Directory (tenant) ID**.
+
+2. **Assign Microsoft Graph API Permissions**
+   - Under **API permissions**, add:
+     - `CallRecords.Read.All` (Application)
+   - Grant **admin consent** for the tenant.
+
+3. **Create a Client Secret**
+   - Under **Certificates & secrets**, generate a new client secret.
+   - Store it securely — it will be used by the Logic App to authenticate.
+
+4. **(Optional) Restrict Access**
+   - Use conditional access or security groups to limit the app’s scope.
+
+Once these steps are complete, you can deploy the Logic App to subscribe to call records and forward them to Log Analytics for analysis.
 
 ## 🧩 Logic App Workflow Explanation
 
